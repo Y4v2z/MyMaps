@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ic_launcher_background">#009587</color>
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyBw8FyLZ3cUEsAc9fxTgwm0TGfqpN_LOeM</string>
+</resources>
+
+
