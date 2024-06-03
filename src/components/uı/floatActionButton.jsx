@@ -7,15 +7,11 @@ import {Colors} from '../../theme/colors';
 const FloatActionButton = props => {
   const {icon, customStyle} = props;
   return (
-    <TouchableOpacity
-      onPress={() => console.log('lkglgh')}
-      {...props}
-      style={[styles.container, customStyle]}>
+    <TouchableOpacity {...props} style={[styles.container, customStyle]}>
       {icon}
     </TouchableOpacity>
   );
 };
-// OnPress çalışmıyor. buna tekrar bak.
 
 // define your styles
 const styles = StyleSheet.create({
