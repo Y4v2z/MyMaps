@@ -1,8 +1,8 @@
 //import liraries
 import React, {Component} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {Colors} from '../../theme/colors';
-import {Star} from 'iconsax-react-native';
+import {Star, ArrowCircleRight2} from 'iconsax-react-native';
 
 // create a component
 const CustomCallout = ({title, description, point}) => {
@@ -31,6 +31,14 @@ const CustomCallout = ({title, description, point}) => {
       <Text style={{fontSize: 12, fontWeight: '500', color: Colors.GRAY}}>
         {description}
       </Text>
+      <TouchableOpacity
+        style={{
+          justifyContent: 'flex-end',
+          alignItems: 'flex-end',
+          marginVertical: 5,
+        }}>
+        <ArrowCircleRight2 size="24" color="#37d67a" variant="Bold" />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -39,7 +47,7 @@ const CustomCallout = ({title, description, point}) => {
 const styles = StyleSheet.create({
   container: {
     width: 200,
-    height: 80,
+    height: 100,
     backgroundColor: Colors.WHITE,
     padding: 5,
     borderRadius: 30,

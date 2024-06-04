@@ -8,10 +8,12 @@ import CustomCallout from '../../components/maps/customCallout';
 import FloatActionButton from '../../components/uı/floatActionButton';
 import {Colors} from '../../theme/colors';
 import Geolocation from '@react-native-community/geolocation';
+import {CALLOUTDETAİL} from '../../utils/routes/routes';
 
 // create a component
-const MyMap = () => {
+const MyMap = ({navigation}) => {
   const [mapType, setMapType] = useState('standard');
+  const [currentPosition, setCurrentPosition] = useState(null);
   const Markers = [
     {
       coordinate: {
@@ -27,8 +29,8 @@ const MyMap = () => {
         latitude: 40.8275818,
         longitude: 29.3608861,
       },
-      title: 'Esra Kebap',
-      description: 'En İyi Kebapçı',
+      title: 'Esra Designer',
+      description: 'Most Popular Shop',
       point: 4.9,
     },
     {
@@ -51,7 +53,8 @@ const MyMap = () => {
   const getCurrentPosition = () => {
     Geolocation.getCurrentPosition(
       pos => {
-        console.log(pos.coords);
+        setCurrentPosition(pos.coords);
+        // console.log(pos.coords);
       },
       error => Alert.alert('GetCurrentPosition Error', JSON.stringify(error)),
       {enableHighAccuracy: true},
@@ -79,15 +82,14 @@ const MyMap = () => {
               mapType == 'standard' ? Colors.WHITE : Colors.BLACK,
           }}
           onPress={() => changeMapType()}
-          //   onPress={() => console.log('fsggsg')}
         />
         <MapView
           provider={PROVIDER_GOOGLE} // remove if not using Google Maps
           mapType={mapType}
           style={styles.map}
           region={{
-            latitude: 40.7812897,
-            longitude: 29.3382882,
+            latitude: currentPosition?.latitude,
+            longitude: currentPosition?.longitude,
             latitudeDelta: 0.25,
             longitudeDelta: 0.5,
           }}>
@@ -98,7 +100,10 @@ const MyMap = () => {
               title={marker.title}
               description={marker.description}>
               <CustomMarker />
-              <Callout>
+              <Callout
+                onPress={() =>
+                  navigation.navigate(CALLOUTDETAİL, {item: marker})
+                }>
                 <CustomCallout
                   title={marker.title}
                   description={marker.description}
@@ -107,6 +112,15 @@ const MyMap = () => {
               </Callout>
             </Marker>
           ))}
+          <Marker
+            title="Konumum"
+            coordinate={{
+              latitude: currentPosition?.latitude,
+              longitude: currentPosition?.longitude,
+              latitudeDelta: 0.25,
+              longitudeDelta: 0.5,
+            }}
+          />
         </MapView>
       </View>
     </SafeAreaView>
