@@ -6,4 +6,9 @@ export const Colors = {
   YELLOW: '#dce775',
   ORANGE: '#ff8a65',
   GRAY: '#808080',
+  YELLOW2: '#e5f19a',
+  PURPLE: '#be9def',
+  BLUE: '#0fb7d8',
+  BLUE2: '#087ea4',
+  SOFT: '#e1eefc',
 };
