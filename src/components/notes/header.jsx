@@ -30,7 +30,6 @@ const styles = StyleSheet.create({
   container: {
     height: height * 0.25,
     justifyContent: 'space-between',
-    paddingTop: height * 0.02,
     paddingBottom: height * 0.06,
   },
 });
