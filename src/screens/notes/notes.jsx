@@ -1,6 +1,14 @@
 //import liraries
-import React, {Component} from 'react';
-import {View, Text, StyleSheet, FlatList, StatusBar} from 'react-native';
+import React, {Component, useState, useEffect} from 'react';
+import firestore from '@react-native-firebase/firestore';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  StatusBar,
+  RefreshControl,
+} from 'react-native';
 import FloatActionButton from '../../components/uı/floatActionButton';
 import {Add} from 'iconsax-react-native';
 import {Colors} from '../../theme/colors';
@@ -8,50 +16,56 @@ import NoteCard from '../../components/notes/noteCard';
 import {ScreensStyle} from '../../styles/screensStyle';
 import Header from '../../components/notes/header';
 import {ADDNOTE} from '../../utils/routes/routes';
+import LoadingModal from '../../components/uı/loadingModal';
 
 // create a component
 const Notes = ({navigation}) => {
-  const notes = [
-    {
-      id: 1,
-      title: 'yazılım',
-      description: 'yarın yazılım dersi var',
-    },
-    {
-      id: 2,
-      title: 'spor',
-      description: 'yarın spor var',
-    },
-    {
-      id: 3,
-      title: 'yazılım',
-      description: 'yarın yazılım dersi var',
-    },
-    {
-      id: 4,
-      title: 'spor',
-      description: 'yarın spor var',
-    },
-    {
-      id: 5,
-      title: 'yazılım',
-      description: 'yarın yazılım dersi var',
-    },
-    {
-      id: 6,
-      title: 'spor',
-      description: 'yarın spor var',
-    },
-  ];
+  const [notes, setNotes] = useState([]);
+  const [pending, setPending] = useState(true);
+  const getNotes = async () => {
+    await firestore()
+      .collection('Notes')
+      .get()
+      .then(querySnapshot => {
+        const fetcedNotes = [];
+        querySnapshot.forEach(documentSnapshot => {
+          // console.log(documentSnapshot);
+          fetcedNotes.push({
+            id: documentSnapshot.id,
+            title: documentSnapshot.data().title,
+            description: documentSnapshot.data().description,
+            date: documentSnapshot.data().date,
+          });
+        });
+        setNotes(fetcedNotes);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+      .finally(setPending(false));
+  };
+
+  useEffect(() => {
+    getNotes();
+  }, []);
+
   return (
     <View style={ScreensStyle.container}>
       <StatusBar backgroundColor={Colors.GRAY} barStyle={'dark-content'} />
-      <FlatList
-        data={notes}
-        renderItem={({item, index}) => <NoteCard note={item} index={index} />}
-        keyExtractor={item => item.id}
-        ListHeaderComponent={Header}
-      />
+      {pending ? (
+        <LoadingModal visible={pending} />
+      ) : (
+        <FlatList
+          RefreshControl={
+            <RefreshControl refreshing={pending} onRefresh={getNotes} />
+          }
+          data={notes}
+          renderItem={({item, index}) => <NoteCard note={item} index={index} />}
+          keyExtractor={item => item.id}
+          ListHeaderComponent={Header}
+        />
+      )}
+
       <FloatActionButton
         icon={<Add size={30} color={Colors.WHITE} />}
         customStyle={{

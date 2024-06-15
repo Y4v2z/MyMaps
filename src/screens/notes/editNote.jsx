@@ -10,10 +10,11 @@ import CustomButton from '../../components/uı/customButton';
 import {NOTES} from '../../utils/routes/routes';
 
 // create a component
-const AddNote = () => {
-  const [title, setTitle] = useState(null);
-  const [description, setDescription] = useState(null);
-  const [date, setDate] = useState(null);
+const EditNote = ({route}) => {
+  const {note} = route?.params;
+  const [title, setTitle] = useState(note.title);
+  const [description, setDescription] = useState(note.description);
+  const [date, setDate] = useState(note.date);
   const [loading, setLoading] = useState(false);
   const saveForm = () => {
     setLoading(true);
@@ -24,9 +25,10 @@ const AddNote = () => {
     };
     firestore()
       .collection('Notes')
-      .add(form)
+      .doc(note?.id)
+      .update(form)
       .then(() => {
-        Alert.alert('Note Added');
+        Alert.alert('Note Updated');
       })
       .catch(error => {
         console.log(error);
@@ -64,7 +66,7 @@ const AddNote = () => {
           <CustomButton
             loading={loading}
             onPress={() => saveForm()}
-            title="ADD NOTE"
+            title="EDİT NOTE"
           />
         }
       </View>
@@ -73,4 +75,4 @@ const AddNote = () => {
 };
 
 //make this component available to the app
-export default AddNote;
+export default EditNote;

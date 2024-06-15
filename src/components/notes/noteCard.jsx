@@ -1,13 +1,30 @@
 //import liraries
 import React, {Component} from 'react';
+import firestore from '@react-native-firebase/firestore';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {Colors} from '../../theme/colors';
 import {height} from '../../utils/constants/constants';
-import {Magicpen} from 'iconsax-react-native';
+import {Magicpen, Trash} from 'iconsax-react-native';
 import {setColors} from '../../utils/functions/functions';
+import {useNavigation} from '@react-navigation/native';
+import {EDİTNOTE} from '../../utils/routes/routes';
 
 // create a component
 const NoteCard = ({note, index}) => {
+  const navigation = useNavigation();
+  const deleteNote = () => {
+    firestore()
+      .collection('Notes')
+      .doc(note?.id)
+      .delete()
+      .then(() => {
+        Alert.alert('Note Deleted');
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
   return (
     <View
       style={{
@@ -32,11 +49,29 @@ const NoteCard = ({note, index}) => {
           justifyContent: 'space-between',
           alignItems: 'center',
         }}>
-        <Text>16 Eylül 2024</Text>
-        <TouchableOpacity
-          style={{backgroundColor: Colors.BLACK, borderRadius: 20, padding: 5}}>
-          <Magicpen size="20" color={Colors.WHITE} variant="Bold" />
-        </TouchableOpacity>
+        <Text>{note.date}</Text>
+        <View style={{flexDirection: 'row'}}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate(EDİTNOTE, {note: note})}
+            style={{
+              backgroundColor: Colors.BLACK,
+              borderRadius: 20,
+              padding: 5,
+              marginHorizontal: 5,
+            }}>
+            <Magicpen size="20" color={Colors.WHITE} variant="Bold" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={deleteNote}
+            style={{
+              backgroundColor: Colors.BLACK,
+              borderRadius: 20,
+              padding: 5,
+              marginHorizontal: 5,
+            }}>
+            <Trash size="20" color={Colors.WHITE} variant="Bold" />
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );

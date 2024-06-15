@@ -14,7 +14,13 @@ import {height} from '../../utils/constants/constants';
 const CustomButton = props => {
   const {title, loading} = props;
   return (
-    <TouchableOpacity {...props} style={styles.container}>
+    <TouchableOpacity
+      disabled={loading}
+      {...props}
+      style={[
+        styles.container,
+        loading ? styles.disabledButton : styles.activeButton,
+      ]}>
       {loading ? (
         <ActivityIndicator />
       ) : (
@@ -31,10 +37,15 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: Colors.BLUE2,
     height: height * 0.06,
     marginHorizontal: 10,
     borderRadius: 10,
+  },
+  activeButton: {
+    backgroundColor: Colors.BLUE2,
+  },
+  disabledButton: {
+    backgroundColor: Colors.ORANGE,
   },
 });
 
