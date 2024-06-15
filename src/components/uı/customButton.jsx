@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   activeButton: {
-    backgroundColor: Colors.BLUE2,
+    backgroundColor: Colors.BLACK,
   },
   disabledButton: {
     backgroundColor: Colors.ORANGE,
