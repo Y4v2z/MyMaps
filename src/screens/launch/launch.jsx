@@ -75,13 +75,13 @@ const Launch = ({navigation}) => {
               justifyContent: 'center',
             }}>
             <TouchableOpacity>
-              <Facebook size="32" color="#0866ff" variant="Bold" />
+              <Facebook size="32" color={Colors.FACEBOOK} variant="Bold" />
             </TouchableOpacity>
             <TouchableOpacity>
-              <Google size="32" color="#f47373" variant="Bold" />
+              <Google size="32" color={Colors.GOOGLE} variant="Bold" />
             </TouchableOpacity>
             <TouchableOpacity>
-              <Instagram size="32" color={Colors.BLUE2} variant="Outline" />
+              <Instagram size="32" color={Colors.INSTAGRAM} variant="Bold" />
             </TouchableOpacity>
           </View>
         </View>

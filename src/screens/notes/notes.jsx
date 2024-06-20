@@ -1,14 +1,7 @@
 //import liraries
 import React, {Component, useState, useEffect} from 'react';
 import firestore from '@react-native-firebase/firestore';
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  StatusBar,
-  RefreshControl,
-} from 'react-native';
+import {View, FlatList, StatusBar, RefreshControl} from 'react-native';
 import FloatActionButton from '../../components/uı/floatActionButton';
 import {Add} from 'iconsax-react-native';
 import {Colors} from '../../theme/colors';

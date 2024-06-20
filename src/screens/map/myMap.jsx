@@ -1,60 +1,59 @@
-//import liraries
-import React, {Component, useState, useEffect} from 'react';
-import {View, Text, StyleSheet, SafeAreaView, Alert} from 'react-native';
-import MapView, {PROVIDER_GOOGLE, Marker, Callout} from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
-import {Map} from 'iconsax-react-native';
+import React, {useState, useEffect} from 'react';
+import {View, StyleSheet, SafeAreaView, Alert} from 'react-native';
+import MapView, {
+  PROVIDER_GOOGLE,
+  Marker,
+  Callout,
+  CalloutSubview,
+} from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
+import Geolocation from '@react-native-community/geolocation';
+import firestore from '@react-native-firebase/firestore';
+import {LocationAdd, Map1} from 'iconsax-react-native';
 import CustomMarker from '../../components/maps/customMarker';
 import CustomCallout from '../../components/maps/customCallout';
 import FloatActionButton from '../../components/uı/floatActionButton';
 import {Colors} from '../../theme/colors';
-import Geolocation from '@react-native-community/geolocation';
 import {CALLOUTDETAİL} from '../../utils/routes/routes';
 
 // create a component
 const MyMap = ({navigation}) => {
-  const [mapType, setMapType] = useState('standard');
-  const [currentPosition, setCurrentPosition] = useState(null);
-  const Markers = [
-    {
-      coordinate: {
-        latitude: 40.7775818,
-        longitude: 29.4008861,
-      },
-      title: 'Kasap Döner',
-      description: 'En İyi Dönerci',
-      point: 3.5,
-    },
-    {
-      coordinate: {
-        latitude: 40.8275818,
-        longitude: 29.3608861,
-      },
-      title: 'Esra Designer',
-      description: 'Most Popular Shop',
-      point: 4.9,
-    },
-    {
-      coordinate: {
-        latitude: 40.8115818,
-        longitude: 29.3168861,
-      },
-      title: 'Yavuz Tantuni',
-      description: 'En İyi Tantuni',
-      point: 4.7,
-    },
-  ];
+  const [currentPosition, setCurrentPossition] = useState(null);
+  const [mapType, setMapType] = useState('standart');
+  const [locations, setLocation] = useState([]);
   const changeMapType = () => {
-    if (mapType === 'standard') {
+    if (mapType === 'standart') {
       setMapType('satellite');
     } else {
-      setMapType('standard');
+      setMapType('standart');
     }
+  };
+  const getLocation = async () => {
+    await firestore()
+      .collection('Locations')
+      .get()
+      .then(querySnapshot => {
+        const fetchedLocations = [];
+        querySnapshot.forEach(documentSnapshot => {
+          fetchedLocations.push({
+            id: documentSnapshot.id,
+            title: documentSnapshot.data().title,
+            description: documentSnapshot.data().description,
+            date: documentSnapshot.data().date,
+            point: documentSnapshot.data().point,
+            coordinate: documentSnapshot.data().coordinate,
+          });
+        });
+        setLocation(fetchedLocations);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+      .finally(() => {});
   };
   const getCurrentPosition = () => {
     Geolocation.getCurrentPosition(
       pos => {
-        setCurrentPosition(pos.coords);
-        // console.log(pos.coords);
+        setCurrentPossition(pos.coords);
       },
       error => Alert.alert('GetCurrentPosition Error', JSON.stringify(error)),
       {enableHighAccuracy: true},
@@ -62,53 +61,61 @@ const MyMap = ({navigation}) => {
   };
   useEffect(() => {
     getCurrentPosition();
+    getLocation();
   }, []);
-
   return (
     <SafeAreaView style={{flex: 1}}>
       <View style={styles.container}>
         <FloatActionButton
+          onPress={() => changeMapType()}
           icon={
-            <Map
-              size={40}
-              color={mapType == 'standard' ? Colors.GREEN : Colors.ORANGE}
-              variant={mapType == 'standard' ? 'Bold' : 'Outline'}
+            <Map1
+              size={30}
+              color={mapType == 'standart' ? Colors.BLACK : Colors.GREEN}
+              variant={mapType == 'standart' ? 'Outline' : 'Bold'}
             />
           }
           customStyle={{
-            right: 20,
+            right: 10,
             top: 20,
-            backgroundColor:
-              mapType == 'standard' ? Colors.WHITE : Colors.BLACK,
           }}
-          onPress={() => changeMapType()}
+        />
+        <FloatActionButton
+          onPress={() => navigation.navigate(COORDINATESELECT)}
+          icon={<LocationAdd size={30} color={Colors.WHITE} />}
+          customStyle={{
+            backgroundColor: Colors.GREEN,
+            bottom: 30,
+          }}
         />
         <MapView
-          provider={PROVIDER_GOOGLE} // remove if not using Google Maps
           mapType={mapType}
+          provider={PROVIDER_GOOGLE} // remove if not using Google Maps
           style={styles.map}
           region={{
             latitude: currentPosition?.latitude,
             longitude: currentPosition?.longitude,
-            latitudeDelta: 0.25,
-            longitudeDelta: 0.5,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
           }}>
-          {Markers.map((marker, index) => (
+          {locations.map((marker, index) => (
             <Marker
               key={index}
-              coordinate={marker.coordinate}
               title={marker.title}
-              description={marker.description}>
+              description={marker.description}
+              coordinate={marker.coordinate}>
               <CustomMarker />
               <Callout
                 onPress={() =>
                   navigation.navigate(CALLOUTDETAİL, {item: marker})
                 }>
-                <CustomCallout
-                  title={marker.title}
-                  description={marker.description}
-                  point={marker.point}
-                />
+                <CalloutSubview>
+                  <CustomCallout
+                    title={marker.title}
+                    description={marker.description}
+                    point={marker.point}
+                  />
+                </CalloutSubview>
               </Callout>
             </Marker>
           ))}
@@ -117,8 +124,8 @@ const MyMap = ({navigation}) => {
             coordinate={{
               latitude: currentPosition?.latitude,
               longitude: currentPosition?.longitude,
-              latitudeDelta: 0.25,
-              longitudeDelta: 0.5,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
             }}
           />
         </MapView>
@@ -127,16 +134,9 @@ const MyMap = ({navigation}) => {
   );
 };
 
-// define your styles
 const styles = StyleSheet.create({
   container: {
-    ...StyleSheet.absoluteFillObject,
     flex: 1,
-
-    // height: 400,
-    // width: 400,
-    // justifyContent: 'flex-end',
-    // alignItems: 'center',
   },
   map: {
     ...StyleSheet.absoluteFillObject,

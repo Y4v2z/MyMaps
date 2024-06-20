@@ -1,25 +1,97 @@
 //import liraries
-import React, {Component} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import React, {useState} from 'react';
+import auth from '@react-native-firebase/auth';
+import {View, Text, SafeAreaView, Image} from 'react-native';
+import {ScreensStyle} from '../../styles/screensStyle';
+import {height, width} from '../../utils/constants/constants';
+import {Colors} from '../../theme/colors';
+import CustomButton from '../../components/uı/customButton';
+import CustomInput from '../../components/uı/customInput';
+import {Key, User} from 'iconsax-react-native';
 
 // create a component
 const SignUp = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleSignUp = () => {
+    setLoading(true);
+    auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then(() => {
+        console.log('Success. User account created!');
+      })
+      .catch(error => {
+        if (error.code === 'auth/email-already-in-use') {
+          console.log('That email address is already in use!');
+        }
+
+        if (error.code === 'auth/invalid-email') {
+          console.log('That email address is invalid!');
+        }
+
+        console.error(error);
+      })
+      .finally(() => setLoading(false));
+  };
   return (
-    <View style={styles.container}>
-      <Text>SignUp</Text>
-    </View>
+    <SafeAreaView style={ScreensStyle.safeAreaView}>
+      <View style={ScreensStyle.container}>
+        <View style={{flex: 2}}>
+          <Image
+            source={require('../../assets/images/signIn.png')}
+            style={{
+              width: width,
+              height: height * 0.36,
+              resizeMode: 'contain',
+            }}
+          />
+        </View>
+        <View
+          style={{
+            flex: 2,
+            justifyContent: 'center',
+          }}>
+          <Text
+            style={{
+              fontSize: 38,
+              fontWeight: 'bold',
+              color: Colors.BLACK,
+              textAlign: 'center',
+            }}>
+            Sign Up
+          </Text>
+          <CustomInput
+            value={email}
+            onChangeText={setEmail}
+            inputTitle="E-mail"
+            placeholder="E-mail"
+            icon={<User color={Colors.BLACK} />}
+          />
+          <CustomInput
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+            inputTitle="Password"
+            placeholder="Password"
+            icon={<Key color={Colors.BLACK} />}
+          />
+        </View>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+          }}>
+          <CustomButton
+            loading={loading}
+            onPress={() => handleSignUp()}
+            title={'Sign Up'}
+          />
+        </View>
+      </View>
+    </SafeAreaView>
   );
 };
 
-// define your styles
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#2c3e50',
-  },
-});
-
-//make this component available to the app
 export default SignUp;

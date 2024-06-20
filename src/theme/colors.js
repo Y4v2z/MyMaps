@@ -11,4 +11,7 @@ export const Colors = {
   BLUE: '#0fb7d8',
   BLUE2: '#087ea4',
   SOFT: '#e1eefc',
+  FACEBOOK: '#395997',
+  GOOGLE: '#db4f43',
+  INSTAGRAM: '#E7D4B5',
 };
