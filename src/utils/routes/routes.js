@@ -11,3 +11,4 @@ export const TAB = 'Tab Navigator';
 export const FAVOURİTES = 'Favourites';
 export const COORDİNATESELECT = 'Coordinate Select';
 export const ADDLOCATION = 'Add Location';
+export const EDITUSERS = 'Profile Update';

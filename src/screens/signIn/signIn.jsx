@@ -1,27 +1,35 @@
 //import liraries
 import React, {useState} from 'react';
 import auth from '@react-native-firebase/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {View, Text, SafeAreaView, Image} from 'react-native';
 import {ScreensStyle} from '../../styles/screensStyle';
 import {height, width} from '../../utils/constants/constants';
 import {Colors} from '../../theme/colors';
 import CustomButton from '../../components/uı/customButton';
 import CustomInput from '../../components/uı/customInput';
-import {Use} from 'react-native-svg';
 import {Key, User} from 'iconsax-react-native';
-import {NOTES} from '../../utils/routes/routes';
 
 // create a component
 const SignIn = ({navigation}) => {
-  const [email, setEmail] = useState('esraavci@gmail.com');
-  const [password, setPassword] = useState('1234Asd.');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const setUserUıd = async id => {
+    try {
+      await AsyncStorage.setItem('uid', id);
+    } catch (e) {
+      // saving error
+      console.log('save error', e);
+    }
+  };
   const handleSignIn = () => {
     setLoading(true);
     auth()
       .signInWithEmailAndPassword(email, password)
       .then(data => {
-        navigation.navigate(NOTES);
+        console.log('user SigIn');
+        setUserUıd(data.user.uid);
       })
       .catch(error => {
         if (error.code === 'auth/email-already-in-use') {
@@ -34,7 +42,9 @@ const SignIn = ({navigation}) => {
 
         console.error(error);
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (

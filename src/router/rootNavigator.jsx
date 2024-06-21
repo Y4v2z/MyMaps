@@ -6,10 +6,9 @@ import {
   ADDNOTE,
   CALLOUTDETAİL,
   COORDİNATESELECT,
+  EDITUSERS,
   EDİTNOTE,
   LAUNCH,
-  MYMAP,
-  NOTES,
   SIGNIN,
   SIGNUP,
   TAB,
@@ -23,6 +22,7 @@ import Launch from '../screens/launch/launch';
 import TabNavigator from './tabNavigator';
 import CoordinateSelect from '../screens/map/coordinateSlect';
 import AddLocation from '../screens/map/addLocation';
+import ProfileUpdate from '../screens/profile/profileUpdate';
 
 const Stack = createNativeStackNavigator();
 function RootNavigator() {
@@ -73,6 +73,7 @@ function RootNavigator() {
           <Stack.Screen name={CALLOUTDETAİL} component={CalloutDetail} />
           <Stack.Screen name={COORDİNATESELECT} component={CoordinateSelect} />
           <Stack.Screen name={ADDLOCATION} component={AddLocation} />
+          <Stack.Screen name={EDITUSERS} component={ProfileUpdate} />
         </Stack.Group>
       )}
     </Stack.Navigator>

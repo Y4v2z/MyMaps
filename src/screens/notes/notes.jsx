@@ -49,7 +49,7 @@ const Notes = ({navigation}) => {
         <LoadingModal visible={pending} />
       ) : (
         <FlatList
-          RefreshControl={
+          refreshControl={
             <RefreshControl refreshing={pending} onRefresh={getNotes} />
           }
           data={notes}

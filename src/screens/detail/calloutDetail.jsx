@@ -1,12 +1,30 @@
 //import liraries
 import React, {Component} from 'react';
+import firestore from '@react-native-firebase/firestore';
 import {View, Text, StyleSheet} from 'react-native';
 import {ScreensStyle} from '../../styles/screensStyle';
 import {Colors} from '../../theme/colors';
+import CustomButton from '../../components/uı/customButton';
 
 // create a component
 const CalloutDetail = ({route}) => {
   const {item} = route?.params;
+  const [loading, setLoading] = useState(false);
+  const addFavorite = () => {
+    setLoading(true);
+    firestore()
+      .collection('Favorites')
+      .add(item)
+      .then(() => {
+        Alert.alert('Location added favorite');
+      })
+      .catch(eror => {
+        console.log(eror);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
   return (
     <View style={ScreensStyle.container}>
       <View
@@ -93,6 +111,13 @@ const CalloutDetail = ({route}) => {
         <Text style={{fontSize: 16, fontWeight: '300', color: Colors.BLACK}}>
           {item.coordinate.latitude}
         </Text>
+      </View>
+      <View style={{flex: 1, justifyContent: 'flex-end', marginVertical: 25}}>
+        <CustomButton
+          loading={loading}
+          onPress={() => addFavorite()}
+          title="Add Favorite"
+        />
       </View>
     </View>
   );

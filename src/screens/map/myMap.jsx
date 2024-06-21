@@ -13,7 +13,7 @@ import CustomMarker from '../../components/maps/customMarker';
 import CustomCallout from '../../components/maps/customCallout';
 import FloatActionButton from '../../components/uı/floatActionButton';
 import {Colors} from '../../theme/colors';
-import {CALLOUTDETAİL} from '../../utils/routes/routes';
+import {CALLOUTDETAİL, COORDİNATESELECT} from '../../utils/routes/routes';
 
 // create a component
 const MyMap = ({navigation}) => {
@@ -29,7 +29,7 @@ const MyMap = ({navigation}) => {
   };
   const getLocation = async () => {
     await firestore()
-      .collection('Locations')
+      .collection('Favourites')
       .get()
       .then(querySnapshot => {
         const fetchedLocations = [];
@@ -81,7 +81,7 @@ const MyMap = ({navigation}) => {
           }}
         />
         <FloatActionButton
-          onPress={() => navigation.navigate(COORDINATESELECT)}
+          onPress={() => navigation.navigate(COORDİNATESELECT)}
           icon={<LocationAdd size={30} color={Colors.WHITE} />}
           customStyle={{
             backgroundColor: Colors.GREEN,

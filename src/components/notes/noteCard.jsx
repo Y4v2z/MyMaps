@@ -3,11 +3,11 @@ import React, {Component} from 'react';
 import firestore from '@react-native-firebase/firestore';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {Colors} from '../../theme/colors';
-import {height} from '../../utils/constants/constants';
-import {Magicpen, Trash} from 'iconsax-react-native';
+import {Magicpen, Trash, Edit2} from 'iconsax-react-native';
 import {setColors} from '../../utils/functions/functions';
 import {useNavigation} from '@react-navigation/native';
 import {EDİTNOTE} from '../../utils/routes/routes';
+import {height} from '../../utils/constants/constants';
 
 // create a component
 const NoteCard = ({note, index}) => {
@@ -29,25 +29,35 @@ const NoteCard = ({note, index}) => {
     <View
       style={{
         backgroundColor: setColors(index),
-        padding: 10,
-        marginVertical: 8,
+        padding: 20,
         borderRadius: 10,
-        minHeight: height * 0.18,
-        justifyContent: 'space-between',
+        marginVertical: 8,
       }}>
-      <View>
-        <Text style={{fontSize: 20, fontWeight: '500', color: Colors.BLACK}}>
+      <View
+        style={{
+          minHeight: height * 0.14,
+        }}>
+        <Text
+          style={{
+            fontWeight: 'bold',
+            fontSize: 20,
+          }}>
           {note.title}
         </Text>
-        <Text tyle={{fontSize: 18, fontWeight: '300', color: Colors.BLACK}}>
+        <Text
+          style={{
+            fontSize: 18,
+            marginVertical: 8,
+            fontWeight: '300',
+          }}>
           {note.description}
         </Text>
       </View>
       <View
         style={{
           flexDirection: 'row',
-          justifyContent: 'space-between',
           alignItems: 'center',
+          justifyContent: 'space-between',
         }}>
         <Text>{note.date}</Text>
         <View style={{flexDirection: 'row'}}>
@@ -55,18 +65,18 @@ const NoteCard = ({note, index}) => {
             onPress={() => navigation.navigate(EDİTNOTE, {note: note})}
             style={{
               backgroundColor: Colors.BLACK,
-              borderRadius: 20,
-              padding: 5,
+              borderRadius: 100,
+              padding: 10,
               marginHorizontal: 5,
             }}>
-            <Magicpen size="20" color={Colors.WHITE} variant="Bold" />
+            <Edit2 size="20" color={Colors.WHITE} variant="Bold" />
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={deleteNote}
+            onPress={() => deleteNote()}
             style={{
               backgroundColor: Colors.BLACK,
-              borderRadius: 20,
-              padding: 5,
+              borderRadius: 100,
+              padding: 10,
               marginHorizontal: 5,
             }}>
             <Trash size="20" color={Colors.WHITE} variant="Bold" />
@@ -78,6 +88,11 @@ const NoteCard = ({note, index}) => {
 };
 
 // define your styles
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
 
 //make this component available to the app
 export default NoteCard;

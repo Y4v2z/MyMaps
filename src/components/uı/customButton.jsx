@@ -12,7 +12,7 @@ import {height} from '../../utils/constants/constants';
 
 // create a component
 const CustomButton = props => {
-  const {title, loading} = props;
+  const {title, loading, style} = props;
   return (
     <TouchableOpacity
       disabled={loading}
@@ -20,6 +20,7 @@ const CustomButton = props => {
       style={[
         styles.container,
         loading ? styles.disabledButton : styles.activeButton,
+        style,
       ]}>
       {loading ? (
         <ActivityIndicator />
